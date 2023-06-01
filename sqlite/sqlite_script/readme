@@ -1,0 +1,30 @@
+Database Info
+The database file is sqlite/db/Fintech.db
+The code dealing with the database is in three different files: DataPull/sql_functions.py, fintech_django.sql_functions.py, and sqlite/sqlite_script/main.py
+DataPull/sql_functions.py contains the functions for adding info to the database and converting info from the database into a csv file for predictions, the functions are as follows.
+•	add_history(datetime, str, float, float, float, float) – this function adds info into the database. The info it adds is a date, company name, and three prices. The prices are one day before, one day after, one month after, and three months after.
+•	convert_date(datetime) – this turns the date into an int the database can use.
+•	output_to_csv() – this turns all the history in the database into a csv file formatted in colums as follows: company name, date, day before price, day after, month after, three months after, transcript.
+•	get_companies_help() – this function returns an array of the different companies in the database.
+•	add_prediction_short(str, float) – add_prediction_medium() – add_prediction_long() – all three of these functions accept a company name and prediction and then add them to the associated table.
+fintech_django/sql_functions.py contains the functions the frontend uses to receive info from the database, the functions are as follows.
+•	get_companies_help() – the same function as used in DataPull/sql_functions.py
+•	get_companies() – adds the array from get_companies_help() and puts it in to a dictionary, turns it into json and returns the json.
+•	get_history(datetime, datetime, str) – takes two dates and the company name and returns the json of a dictionary which holds the array of tuples, where each tuple is a row from the table pertaining to the company.
+•	get_prediction_short(str) - get_prediction_medium(str) - get_prediction_long(str) – each of these return the json of a dictionary of an array of tuples (the array should only have a length of one if the database is working correctly) where the tuple is the company name and prediction from the associated table.
+•	convert_date(datetime) – the same function as in DataPull/sql_functions.py
+•	get_current(str) – returns the most recent day before price in the table associated with the company name.
+sqlite/sqlite_script/main.py is a command line program to run for developer convenience. The program can be run with different commands as follows.
+•	-h or -help – these return the list of possible commands
+•	-c – this will create a table if it doesn’t already exist. Will run for each name after -c
+•	-d – this will instead drop a table if it does exits, Will run for each name after -d
+•	-s – this will display all tuples from a table, will run for each name after -s
+•	-n – this provides a list of all tables/names of companies in the database
+•	-cs – this creates the short prediction table
+•	-cm – this creates the medium prediction table
+•	-cl – this creates the long prediction table
+•	-ss – this displays all tuples from the short prediction table
+•	-sm – this displays all tuples from the medium prediction table
+•	-sl – this displays all tuples from the long prediction table
+•	-ct – this displays the count of all tuples in a table, will run for each name after -ct
+•	-dd – this will delete any dummy data from all table (dummy data is classified as tuples where the transcript is ‘transcript’)
